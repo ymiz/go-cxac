@@ -1,7 +1,11 @@
 package main
 
-import "log"
+import (
+	"log"
+)
 
 func main() {
 	log.Println("go-cxac")
+
+	//trades.Example()
 }
