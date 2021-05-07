@@ -32,6 +32,10 @@ func (c *Connector) Connect() (r *Result) {
 		r = NewResult(code.CloseError, err)
 	}()
 
+	// NOTE: 少なくともGMOで必要. `サーバーから1分に1回クライアントへpingを送り、3回連続でクライアントからの応答(pong)が無かった場合は、自動的に切断されます。`
+	//	 @see https://api.coin.z.com/docs/#public-ws-api
+	conn.SetPingHandler(nil)
+
 	err = conn.WriteJSON(c.subscriptionParameter)
 	if err != nil {
 		return NewResult(code.Disconnected, err)
