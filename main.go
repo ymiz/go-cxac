@@ -11,4 +11,5 @@ func main() {
 	//executions.Example()
 	//priceLadders.Example()
 	//ticker.Example()
+	//post.Example()
 }
