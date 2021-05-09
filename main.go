@@ -12,4 +12,5 @@ func main() {
 	//priceLadders.Example()
 	//ticker.Example()
 	//post.Example()
+	//cancel.Example()
 }
