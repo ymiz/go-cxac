@@ -33,5 +33,5 @@ type Data struct {
 	Price     float64
 	Quantity  float64
 	TakerSide string
-	Timestamp string // TODO: timeに変換したい
+	Timestamp time.Time
 }

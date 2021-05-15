@@ -11,6 +11,7 @@ import (
 	"github.com/ymiz/go-cxac/liquid/websocket/public/subscription/data/channel/executions"
 	event2 "github.com/ymiz/go-cxac/liquid/websocket/public/subscription/data/event"
 	"github.com/ymiz/go-cxac/liquid/websocket/public/subscription/event"
+	"strconv"
 	"time"
 )
 
@@ -58,19 +59,38 @@ func (c *Client) Connect() (r *result.Result) {
 			}
 			return nil
 		}
-		c.ch <- NewExecution(r.Channel, convertData(d), r.Event)
+		executionData, err := convertData(d)
+		if err != nil {
+			if c.errorHandler != nil && c.errorHandler.onUnMarshalError != nil {
+				c.errorHandler.onUnMarshalError(err)
+			}
+			return nil
+		}
+		c.ch <- NewExecution(r.Channel, executionData, r.Event)
 		return nil
 	})
 	return connector.Connect()
 }
 
-func convertData(r *RawData) Data {
+func convertData(r *RawData) (Data, error) {
+	timestamp, err := convertTimeStamp(r.Timestamp)
+	if err != nil {
+		return Data{}, err
+	}
 	return Data{
 		CreatedAt: time.Unix(int64(r.CreatedAt), 0),
 		ID:        r.ID,
 		Price:     r.Price,
 		Quantity:  r.Quantity,
 		TakerSide: r.TakerSide,
-		Timestamp: r.Timestamp,
+		Timestamp: timestamp,
+	}, nil
+}
+
+func convertTimeStamp(s string) (time.Time, error) {
+	f, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		return time.Time{}, err
 	}
+	return time.Unix(0, int64(f*1000000000)), nil
 }
