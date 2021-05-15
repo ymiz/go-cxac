@@ -1,6 +1,7 @@
 package executions
 
 import (
+	"github.com/gorilla/websocket"
 	"github.com/ymiz/go-cxac/common/json"
 	"github.com/ymiz/go-cxac/common/websocket/connection"
 	"github.com/ymiz/go-cxac/common/websocket/connection/result"
@@ -32,20 +33,22 @@ func NewClient(ch chan *Execution, currencyPairCode pair.Code, errorHandler *Err
 }
 
 func (c *Client) Connect() (r *result.Result) {
-	connector := connection.NewConnector(public.EndPoint, subscription.Parameter{
-		Event: event.Subscribe,
-		Data: subscription.Data{
-			Channel: executions.Generate(c.currencyPairCode),
-			Event:   event2.Updated,
-		},
-	}, func(message []byte) {
+	connector := connection.NewConnector(public.EndPoint, func(conn *websocket.Conn) error {
+		return conn.WriteJSON(subscription.Parameter{
+			Event: event.Subscribe,
+			Data: subscription.Data{
+				Channel: executions.Generate(c.currencyPairCode),
+				Event:   event2.Updated,
+			},
+		})
+	}, func(message []byte, conn *websocket.Conn) *result.Result {
 		var r *RawExecution
 		err := json.Unmarshal(message, &r)
 		if err != nil {
 			if c.errorHandler != nil && c.errorHandler.onUnMarshalError != nil {
 				c.errorHandler.onUnMarshalError(err)
 			}
-			return
+			return nil
 		}
 		var d *RawData
 		err = json.Unmarshal([]byte(r.Data), &d)
@@ -53,9 +56,10 @@ func (c *Client) Connect() (r *result.Result) {
 			if c.errorHandler != nil && c.errorHandler.onUnMarshalError != nil {
 				c.errorHandler.onUnMarshalError(err)
 			}
-			return
+			return nil
 		}
 		c.ch <- NewExecution(r.Channel, convertData(d), r.Event)
+		return nil
 	})
 	return connector.Connect()
 }

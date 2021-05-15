@@ -1,6 +1,7 @@
 package ticker
 
 import (
+	"github.com/gorilla/websocket"
 	"github.com/ymiz/go-cxac/common/json"
 	"github.com/ymiz/go-cxac/common/websocket/connection"
 	"github.com/ymiz/go-cxac/common/websocket/connection/result"
@@ -32,16 +33,19 @@ func NewClient(
 }
 
 func (c *Client) Connect() (r *result.Result) {
-	connector := connection.NewConnector(c.wsUrl, c.subscriptionParameter, func(message []byte) {
+	connector := connection.NewConnector(c.wsUrl, func(conn *websocket.Conn) error {
+		return conn.WriteJSON(c.subscriptionParameter)
+	}, func(message []byte, conn *websocket.Conn) *result.Result {
 		var ticker *Ticker
 		err := json.Unmarshal(message, &ticker)
 		if err != nil {
 			if c.errorHandler != nil && c.errorHandler.onUnMarshalError != nil {
 				c.errorHandler.onUnMarshalError(err)
 			}
-			return
+			return nil
 		}
 		c.ch <- ticker
+		return nil
 	})
 	return connector.Connect()
 }

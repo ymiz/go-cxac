@@ -9,6 +9,7 @@ const (
 	ReadMessageError = Code("READ_MESSAGE_ERROR")
 	DialError        = Code("DIAL_ERROR")
 	SocketCloseError = Code("SOCKET_CLOSE_ERROR")
+	AuthError        = Code("AUTH_ERROR")
 )
 
 func (c Code) IsDisconnected() bool {
@@ -33,6 +34,10 @@ func (c Code) IsDialError() bool {
 
 func (c Code) IsSocketCloseError() bool {
 	return c == SocketCloseError
+}
+
+func (c Code) IsAuthError() bool {
+	return c == AuthError
 }
 
 func (c Code) ToString() string {
