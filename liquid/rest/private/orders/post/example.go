@@ -7,6 +7,7 @@ import (
 	"github.com/ymiz/go-cxac/liquid/product"
 	"github.com/ymiz/go-cxac/liquid/rest/private/common"
 	"github.com/ymiz/go-cxac/liquid/rest/private/orders"
+	"github.com/ymiz/go-cxac/liquid/rest/private/orders/post/request"
 	"github.com/ymiz/go-cxac/liquid/rest/private/orders/post/request/leverage"
 	"github.com/ymiz/go-cxac/liquid/side"
 	"log"
@@ -14,7 +15,19 @@ import (
 
 func Example() {
 	conf := config.GenerateConfigExample()
-	requestBody := leverage.CreateLimitPostOnlyOrderBody(
+	//requestBody := generateLimitRequestBody()
+	requestBody := generateMarketRequestBody()
+	resp, body, err := NewClient(common.NewToken(conf.Liquid.ApiTokenId, conf.Liquid.ApiTokenSecret), resty.New()).Do(requestBody)
+	if err != nil {
+		log.Println("liquid rest private orders post error:", err, resp)
+		return
+	}
+	log.Println("response body", body)
+	log.Println("resp", resp)
+}
+
+func generateLimitRequestBody() request.Body {
+	return leverage.CreateLimitPostOnlyOrderBody(
 		product.BtcJpy,
 		side.Buy,
 		0.0001,
@@ -23,11 +36,15 @@ func Example() {
 		currency.Jpy,
 		orders.NetOut,
 	)
-	resp, body, err := NewClient(common.NewToken(conf.Liquid.ApiTokenId, conf.Liquid.ApiTokenSecret), resty.New()).Do(requestBody)
-	if err != nil {
-		log.Println("liquid rest private orders post error:", err, resp)
-		return
-	}
-	log.Println("response body", body)
-	log.Println("resp", resp)
+}
+
+func generateMarketRequestBody() request.Body {
+	return leverage.CreateMarketOrderBody(
+		product.BtcJpy,
+		side.Buy,
+		0.0001,
+		orders.Twice,
+		currency.Jpy,
+		orders.NetOut,
+	)
 }

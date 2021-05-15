@@ -49,3 +49,22 @@ func CreateLimitPostOnlyOrderBody(
 		OrderDirection:  orderDirection.ToString(),
 	}
 }
+
+func CreateMarketOrderBody(
+	productId product.Id,
+	side side.Side,
+	quantity float64,
+	leverageLevel orders.LeverageLevel,
+	fundingCurrency currency.Code,
+	orderDirection orders.OrderDirection,
+) request.Body {
+	return request.Body{
+		OrderType:       orders.Market.ToString(),
+		ProductId:       productId.ToInt(),
+		Side:            side.ToLowerString(),
+		Quantity:        quantity,
+		LeverageLevel:   leverageLevel.ToInt(),
+		FundingCurrency: fundingCurrency.ToString(),
+		OrderDirection:  orderDirection.ToString(),
+	}
+}
