@@ -51,7 +51,6 @@ func (c *Connector) Connect() (r *Result) {
 			c.closeConnectionWithLog(conn)
 			close(done)
 		}()
-		defer close(done)
 		for {
 			_, message, err := conn.ReadMessage()
 			if err != nil {
