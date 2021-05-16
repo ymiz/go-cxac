@@ -15,8 +15,8 @@ import (
 
 func Example() {
 	conf := config.GenerateConfigExample()
-	//requestBody := generateLimitRequestBody()
-	requestBody := generateMarketRequestBody()
+	requestBody := generateLimitRequestBody()
+	//requestBody := generateMarketRequestBody()
 	resp, body, err := NewClient(common.NewToken(conf.Liquid.ApiTokenId, conf.Liquid.ApiTokenSecret), resty.New()).Do(requestBody)
 	if err != nil {
 		log.Println("liquid rest private orders post error:", err, resp)
@@ -31,7 +31,7 @@ func generateLimitRequestBody() request.Body {
 		product.BtcJpy,
 		side.Buy,
 		0.0001,
-		6000000,
+		4500000,
 		orders.Twice,
 		currency.Jpy,
 		orders.NetOut,

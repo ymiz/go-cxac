@@ -1,5 +1,7 @@
 package product
 
+import "strconv"
+
 type Id int
 
 const (
@@ -8,4 +10,8 @@ const (
 
 func (i Id) ToInt() int {
 	return int(i)
+}
+
+func (i Id) ToString() string {
+	return strconv.Itoa(int(i))
 }

@@ -14,4 +14,5 @@ func main() {
 	//post.Example()
 	//cancel.Example()
 	//executions.Example()
+	//all.Example()
 }
