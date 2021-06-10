@@ -15,4 +15,5 @@ func main() {
 	//cancel.Example()
 	//executions.Example()
 	//all.Example()
+	//trade.Example()
 }
