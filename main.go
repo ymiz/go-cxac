@@ -16,4 +16,5 @@ func main() {
 	//executions.Example()
 	//all.Example()
 	//trade.Example()
+	//edit.Example()
 }

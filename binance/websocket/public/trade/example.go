@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"time"
 )
 
 func Example() {
@@ -20,7 +21,9 @@ func Example() {
 		case <-interrupt:
 			return
 		case trade := <-c:
-			log.Println("example trade client", trade)
+			ti := time.Unix(0, int64(trade.T1*1000000))
+			ti2 := time.Unix(0, int64(trade.E1*1000000))
+			log.Println("example trade client", trade, ti, ti2)
 		}
 	}
 }
