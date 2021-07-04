@@ -17,4 +17,6 @@ func main() {
 	//all.Example()
 	//trade.Example()
 	//edit.Example()
+	//sendchildorder.Example()
+	//cancelchildorder.Example()
 }
