@@ -4,7 +4,7 @@ type Side string
 
 const (
 	Buy  = Side("BUY")
-	Sell = Side("Sell")
+	Sell = Side("SELL")
 )
 
 func (s Side) IsBuy() bool {
