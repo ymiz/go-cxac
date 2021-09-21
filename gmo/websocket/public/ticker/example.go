@@ -19,7 +19,8 @@ func Example() {
 	client := NewClient(c, public.EndPoint, subscription.Parameter{
 		Command: command.Subscribe,
 		Channel: channel.Ticker,
-		Symbol:  symbol.BtcJpy,
+		//Symbol:  symbol.BtcJpy,
+		Symbol: symbol.XrpJpy,
 	}, nil)
 	go client.Connect()
 

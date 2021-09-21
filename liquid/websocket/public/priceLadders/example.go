@@ -13,9 +13,15 @@ func Example() {
 	signal.Notify(interrupt, os.Interrupt)
 
 	c := make(chan *PriceLadders)
-	client := NewClient(c, pair.BtcJpy, side.Buy, NewErrorHandler(func(err error) {
-		log.Println("priceLadders example onUnmarshalError", err.Error())
-	}))
+	client := NewClient(
+		c,
+		//pair.BtcJpy,
+		pair.XrpJpy,
+		side.Buy,
+		NewErrorHandler(func(err error) {
+			log.Println("priceLadders example onUnmarshalError", err.Error())
+		}),
+	)
 	go client.Connect()
 
 	for {
