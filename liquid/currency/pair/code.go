@@ -7,6 +7,7 @@ type Code string
 const (
 	BtcJpy = Code("BTCJPY")
 	XrpJpy = Code("XRPJPY")
+	EthJpy = Code("ETHJPY")
 )
 
 func (c Code) ToString() string {

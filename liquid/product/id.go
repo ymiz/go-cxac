@@ -6,6 +6,8 @@ type Id int
 
 const (
 	BtcJpy = Id(5)
+	EtcJpy = Id(29)
+	XrpJpy = Id(83)
 )
 
 func (i Id) ToInt() int {
