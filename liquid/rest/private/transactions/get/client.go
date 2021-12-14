@@ -3,8 +3,8 @@ package get
 import (
 	"github.com/go-resty/resty/v2"
 	"github.com/ymiz/go-cxac/common/json"
-	"github.com/ymiz/go-cxac/liquid/currency"
 	"github.com/ymiz/go-cxac/liquid/rest/private/common"
+	"github.com/ymiz/go-cxac/liquid/rest/private/transactions/get/request/parameter"
 	"github.com/ymiz/go-cxac/liquid/rest/private/transactions/get/response"
 )
 
@@ -17,8 +17,11 @@ func NewClient(token *common.Token, rc *resty.Client) *Client {
 	return &Client{token: token, rc: rc}
 }
 
-func (c *Client) Do(code currency.Code) (*resty.Response, *response.Body, error) {
-	path := "/transactions/" + code.ToString()
+func (c *Client) Do(parameterGenerator *parameter.Generator) (*resty.Response, *response.Body, error) {
+	path := "/transactions/"
+	if parameterGenerator != nil {
+		path = path + "?" + parameterGenerator.Generate().Encode()
+	}
 
 	cl, err := common.GenerateRequest(c.rc, c.token, path)
 	if err != nil {
